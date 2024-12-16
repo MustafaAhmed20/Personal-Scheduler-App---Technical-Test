@@ -5,6 +5,7 @@ import 'package:scheduler/views/constants/constants.dart';
 
 // login
 import 'package:scheduler/views/screens/login/login_screen.dart';
+import 'package:scheduler/views/screens/home/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -44,7 +45,8 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
-          home: const LoginScreen(),
+          // home: const LoginScreen(),
+          home: const HomeScreen(),
         );
       },
     );
