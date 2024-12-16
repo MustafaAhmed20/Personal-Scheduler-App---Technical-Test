@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:scheduler/navigator_settings.dart';
 import 'package:scheduler/views/constants/constants.dart';
 
 // login
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           title: 'Personal Scheduler',
           debugShowCheckedModeBanner: false,
+          navigatorKey: AppNavigationHandler.appNavigatorKey,
           theme: ThemeData(
             useMaterial3: true,
             textTheme: AppFontsFamilies.defaultTheme,

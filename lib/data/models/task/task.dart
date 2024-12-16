@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:scheduler/views/constants/constants.dart';
 
 import 'package:json_annotation/json_annotation.dart';
@@ -6,19 +7,35 @@ import 'package:json_annotation/json_annotation.dart';
 part 'task.g.dart';
 
 enum TaskPriority {
-  low(AppColors.primaryLight3),
-  med(AppColors.lightPurple),
-  high(AppColors.darkRedColor7);
+  low(AppColors.primaryLight3, "Low"),
+  med(AppColors.lightPurple, "Med"),
+  high(AppColors.darkRedColor7, "High");
 
-  const TaskPriority(this.color);
+  const TaskPriority(this.color, this.label);
 
   final Color color;
+  final String label;
+}
+
+enum TaskCategory {
+  work(AppColors.primaryLight3, "Work"),
+  personal(AppColors.lightPurple, "Personal"),
+  fun(AppColors.lightGreen2, "Fun"),
+  study(AppColors.lightYellow1, "Study");
+
+  const TaskCategory(this.color, this.label);
+
+  final Color color;
+  final String label;
 }
 
 @JsonSerializable(explicitToJson: true)
 class Task {
   //
   TaskPriority taskPriority;
+
+  /// Categories
+  Set<TaskCategory> categories;
 
   @JsonKey(name: 'task_name')
   String? taskName;
@@ -36,6 +53,7 @@ class Task {
   Task({
     required this.taskPriority,
     this.taskName,
+    this.categories = const {},
     //
     required this.taskDate,
     required this.taskStartMoment,

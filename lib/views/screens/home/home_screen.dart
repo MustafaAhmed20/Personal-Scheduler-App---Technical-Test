@@ -9,6 +9,8 @@ import 'package:scheduler/data/data.dart';
 import 'package:scheduler/views/constants/constants.dart';
 import 'package:scheduler/views/widgets/app_scaffold.dart';
 
+import 'logic.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -17,7 +19,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  void _onNewTask() {}
+  void _onNewTask() {
+    pushNewTaskDialog();
+  }
 
   @override
   Widget build(BuildContext context) {

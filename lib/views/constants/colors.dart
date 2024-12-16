@@ -46,8 +46,11 @@ abstract class AppColors {
   static const Color lightGray41 = Color(0xFFF7F8F9);
   static const Color lightGray42 = Color(0xFF8390A1);
   static const Color lightGray43 = Color(0xFF737791);
+  static const Color lightGray44 = Color(0xFF7e7e7e);
 
   static const Color lightBrown1 = Color(0xFFD9913B);
+
+  static const Color lightYellow1 = Color(0xFFf6c344);
 
   static const Color lightPink = Color(0xFFFFE4F1);
   static const Color lightPink2 = Color(0xFFFCE4E6);
@@ -55,6 +58,7 @@ abstract class AppColors {
   static const Color lightPink4 = Color(0xFFFD6B98);
 
   static const Color lightGreen = Color(0xff7eb973);
+  static const Color lightGreen2 = Color(0xff67ad5b);
 
   static const Color darkRedColor = Color(0xffE84242);
   static const Color darkRedColor2 = Color(0xffD72A2A);
