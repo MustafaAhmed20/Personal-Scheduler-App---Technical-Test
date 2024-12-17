@@ -1,16 +1,23 @@
-# scheduler
+# Personal Scheduler App - Technical Test
 
-A new Flutter project.
+A modern personal scheduler application designed to streamline daily task management with features such as authentication, task timelines, and a sleek, user-friendly interface. This app was built as part of a technical test.
 
-## Getting Started
+## Features
+* Login Screen
+* Main Schedule Screen
+* Task Creation Modal
 
-This project is a starting point for a Flutter application.
+## Installation
 
-A few resources to get you started if this is your first Flutter project:
+1. **Prerequisites:**
+    * Flutter SDK installed and configured.
+    * An IDE like Android Studio or VS Code with Flutter extensions.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+2. **Installation:**
+    * Clone this repository: `git clone`
+    * Install dependencies: `flutter pub get`
+    * Run `build_runner` with `dart run build_runner build`
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+3. **Running the app:**
+    * Connect a device or start an emulator/simulator.
+    * Run the app: `flutter run`

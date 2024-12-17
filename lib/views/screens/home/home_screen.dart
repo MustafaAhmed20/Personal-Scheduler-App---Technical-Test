@@ -540,14 +540,12 @@ class TaskCard extends StatelessWidget {
                     bottomEnd: Radius.circular(12.sp),
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Stack(
                   children: [
-                    // task name
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // task name
                         Text(
                           task.taskName ?? '',
                           style: AppTextStyle.textStyle16.copyWith(
@@ -555,41 +553,45 @@ class TaskCard extends StatelessWidget {
                           ),
                         ),
 
-                        // Delete button
-                        IconButton(
-                          onPressed: () => _onDelete(confirmFirst: true),
-                          style: IconButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        //
+                        const Spacer(),
+
+                        // time of the task
+                        Text.rich(
+                          TextSpan(
+                            text: _hourFormatter(task.taskStartMoment),
+                            children: [
+                              const TextSpan(text: ' - '),
+
+                              //
+                              TextSpan(
+                                text: _hourFormatter(task.taskEndMoment),
+                              ),
+                            ],
                           ),
-                          icon: Icon(
-                            Icons.delete,
-                            size: 18.sp,
-                            color: Colors.red,
+                          textDirection: TextDirection.ltr,
+                          style: AppTextStyle.textStyle14.copyWith(
+                            color: Colors.grey.shade700,
                           ),
                         ),
                       ],
                     ),
 
-                    //
-                    const Spacer(),
-
-                    // time of the task
-                    Text.rich(
-                      TextSpan(
-                        text: _hourFormatter(task.taskStartMoment),
-                        children: [
-                          const TextSpan(text: ' - '),
-
-                          //
-                          TextSpan(
-                            text: _hourFormatter(task.taskEndMoment),
-                          ),
-                        ],
-                      ),
-                      textDirection: TextDirection.ltr,
-                      style: AppTextStyle.textStyle14.copyWith(
-                        color: Colors.grey.shade700,
+                    // delete
+                    // Delete button
+                    Align(
+                      alignment: AlignmentDirectional.topEnd,
+                      child: IconButton(
+                        onPressed: () => _onDelete(confirmFirst: true),
+                        style: IconButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        icon: Icon(
+                          Icons.delete,
+                          size: 18.sp,
+                          color: Colors.red,
+                        ),
                       ),
                     ),
                   ],
