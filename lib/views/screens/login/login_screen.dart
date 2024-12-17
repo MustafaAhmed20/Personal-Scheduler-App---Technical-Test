@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:scheduler/navigator_settings.dart';
 import 'package:scheduler/views/constants/constants.dart';
 import 'package:scheduler/views/widgets/app_scaffold.dart';
 
@@ -29,6 +30,9 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!_formKey.currentState!.saveAndValidate()) {
       return;
     }
+
+    //
+    AppNavigationHandler.closeKeyboard();
 
     String? email = _formKey.currentState?.fields['email']?.value;
     String? password = _formKey.currentState?.fields['password']?.value;

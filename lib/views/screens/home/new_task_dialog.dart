@@ -77,6 +77,8 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
       return;
     }
 
+    AppNavigationHandler.closeKeyboard();
+
     //
     // Submit form
     addNewTask(
