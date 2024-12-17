@@ -9,6 +9,12 @@ import 'package:scheduler/data/data.dart';
 import 'package:scheduler/views/constants/constants.dart';
 import 'package:scheduler/views/widgets/app_scaffold.dart';
 
+import 'package:provider/provider.dart';
+import 'package:scheduler/data/data.dart';
+
+import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:scheduler/views/widgets/exit_app_confirmation.dart';
+
 import 'logic.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -19,37 +25,61 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late Map<DateTime, List<Task>> allTasks;
+
+  //
+  DateTime _selectedDate = DateTime.now();
+
   void _onNewTask() {
-    pushNewTaskDialog();
+    pushNewTaskDialog(
+      date: _selectedDate,
+    );
+  }
+
+  @override
+  void initState() {
+    // Load tasks
+    loadAllUserTasks();
+
+    //
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    allTasks = Provider.of<TasksProvider>(context, listen: true).tasks;
+
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Task> tasks = [
-      Task(
-        taskDate: DateTime.now(),
-        taskEndMoment: DateTime.now(),
-        taskStartMoment: DateTime.now(),
-        //
-        taskPriority: TaskPriority.low,
-        taskName: 'First task',
-      ),
-      Task(
-        taskDate: DateTime.now(),
-        taskEndMoment: DateTime.now(),
-        taskStartMoment: DateTime.now(),
-        //
-        taskPriority: TaskPriority.med,
-        taskName: 'Second task',
-      ),
-      Task(
-        taskDate: DateTime.now(),
-        taskEndMoment: DateTime.now(),
-        taskStartMoment: DateTime.now(),
-        //
-        taskPriority: TaskPriority.high,
-        taskName: 'Third task',
-      ),
+    List<Task> tasks = allTasks[Task.dateWithoutTime(_selectedDate)] ?? [];
+    [
+      //   Task(
+      //     taskDate: DateTime.now(),
+      //     taskEndMoment: DateTime.now(),
+      //     taskStartMoment: DateTime.now(),
+      //     //
+      //     taskPriority: TaskPriority.low,
+      //     taskName: 'First task',
+      //   ),
+      //   Task(
+      //     taskDate: DateTime.now(),
+      //     taskEndMoment: DateTime.now(),
+      //     taskStartMoment: DateTime.now(),
+      //     //
+      //     taskPriority: TaskPriority.med,
+      //     taskName: 'Second task',
+      //   ),
+      //   Task(
+      //     taskDate: DateTime.now(),
+      //     taskEndMoment: DateTime.now(),
+      //     taskStartMoment: DateTime.now(),
+      //     //
+      //     taskPriority: TaskPriority.high,
+      //     taskName: 'Third task',
+      //   ),
     ];
 
     return AppScaffold(
@@ -76,7 +106,12 @@ class _HomeScreenState extends State<HomeScreen> {
           8.h.verticalSpace,
 
           _DatePickerCard(
-            onChangeSelectedDate: (date) {},
+            selectedDay: _selectedDate,
+            onChangeSelectedDate: (date) {
+              setState(() {
+                _selectedDate = date;
+              });
+            },
           ),
 
           10.h.verticalSpace,
@@ -112,8 +147,14 @@ class _HomeScreenState extends State<HomeScreen> {
 class _UserHeader extends StatelessWidget {
   const _UserHeader({super.key});
 
+  void _onLogout() => onLogout();
+
   @override
   Widget build(BuildContext context) {
+    //
+    User? loggedInUser =
+        Provider.of<AuthorizationProvider>(context, listen: true).loggedInUser;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.w),
       child: Row(
@@ -135,7 +176,7 @@ class _UserHeader extends StatelessWidget {
               children: [
                 //
                 Text(
-                  'User name',
+                  loggedInUser?.name ?? '',
                   style: AppTextStyle.textStyle12,
                 ),
 
@@ -143,7 +184,7 @@ class _UserHeader extends StatelessWidget {
                 1.h.verticalSpace,
 
                 Text(
-                  'Sub-title',
+                  loggedInUser?.email ?? '',
                   style: AppTextStyle.textStyle10,
                 ),
               ],
@@ -160,13 +201,38 @@ class _UserHeader extends StatelessWidget {
                 ),
                 onPressed: () {},
               ),
-              IconButton(
-                icon: Icon(
+
+              // Actions drop-down
+              DropdownButton2(
+                // contains only logout
+                items: [
+                  DropdownMenuItem<String>(
+                    value: 'Logout',
+                    child: Text(
+                      'Logout',
+                      style: AppTextStyle.textStyle12.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.darkRedColor,
+                      ),
+                    ),
+                  ),
+                ],
+                onChanged: (value) {
+                  _onLogout();
+                },
+                customButton: Icon(
                   Icons.more_vert,
                   color: Colors.black,
                   size: 20.sp,
                 ),
-                onPressed: () {},
+                dropdownStyleData: DropdownStyleData(
+                  width: 120.w,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.sp),
+                    color: Colors.white,
+                  ),
+                  elevation: 4,
+                ),
               ),
             ],
           ),
@@ -388,96 +454,150 @@ class TaskCard extends StatelessWidget {
     required this.task,
   });
 
+  void _onDelete({bool confirmFirst = false}) =>
+      deleteTask(task: task, confirmFirst: confirmFirst);
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 100.h,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: 50.w,
-            padding: EdgeInsets.symmetric(vertical: 10.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  _hourFormatter(task.taskStartMoment),
-                  style: AppTextStyle.textStyle12.copyWith(
-                    color: Colors.grey.shade700,
-                  ),
-                ),
-
-                //
-                Text(
-                  _hourFormatter(task.taskEndMoment),
-                  style: AppTextStyle.textStyle12.copyWith(
-                    color: Colors.grey.shade700,
-                  ),
-                ),
-              ],
+    return Dismissible(
+      key: ValueKey(task.taskStartMoment),
+      direction: DismissDirection.horizontal,
+      onDismissed: (direction) => _onDelete(),
+      confirmDismiss: (direction) => confirmDeleteTask(),
+      background: SizedBox(
+        height: 80.h,
+        child: Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: Text(
+            'Swipe to delete',
+            style: AppTextStyle.textStyle12.copyWith(
+              color: Colors.red,
             ),
           ),
-
-          //
-          Container(
-            height: 80.h,
-            width: 4.w,
-            decoration: BoxDecoration(
-              color: task.taskPriority.color,
-              borderRadius: BorderRadius.circular(20.sp),
+        ),
+      ),
+      secondaryBackground: SizedBox(
+        height: 80.h,
+        child: Align(
+          alignment: AlignmentDirectional.centerEnd,
+          child: Text(
+            'Swipe to delete',
+            style: AppTextStyle.textStyle12.copyWith(
+              color: Colors.red,
             ),
           ),
-
-          //
-          Expanded(
-            child: Container(
-              height: 80.h,
-              padding: EdgeInsets.all(12.r),
-              decoration: BoxDecoration(
-                color: task.taskPriority.color.withOpacity(0.4),
-                borderRadius: BorderRadiusDirectional.only(
-                  topEnd: Radius.circular(12.sp),
-                  bottomEnd: Radius.circular(12.sp),
-                ),
-              ),
+        ),
+      ),
+      child: SizedBox(
+        height: 100.h,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: 50.w,
+              padding: EdgeInsets.symmetric(vertical: 10.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // task name
                   Text(
-                    task.taskName ?? '',
-                    style: AppTextStyle.textStyle16.copyWith(
-                      fontWeight: FontWeight.bold,
+                    _hourFormatter(task.taskStartMoment),
+                    style: AppTextStyle.textStyle12.copyWith(
+                      color: Colors.grey.shade700,
                     ),
                   ),
 
                   //
-                  8.h.verticalSpace,
-
-                  // time of the task
-                  Text.rich(
-                    TextSpan(
-                      text: _hourFormatter(task.taskStartMoment),
-                      children: [
-                        const TextSpan(text: ' - '),
-
-                        //
-                        TextSpan(
-                          text: _hourFormatter(task.taskEndMoment),
-                        ),
-                      ],
-                    ),
-                    style: AppTextStyle.textStyle14.copyWith(
+                  Text(
+                    _hourFormatter(task.taskEndMoment),
+                    style: AppTextStyle.textStyle12.copyWith(
                       color: Colors.grey.shade700,
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-        ],
+
+            //
+            Container(
+              height: 80.h,
+              width: 4.w,
+              decoration: BoxDecoration(
+                color: task.taskPriority.color,
+                borderRadius: BorderRadius.circular(20.sp),
+              ),
+            ),
+
+            //
+            Expanded(
+              child: Container(
+                height: 85.h,
+                padding: EdgeInsets.all(12.r),
+                decoration: BoxDecoration(
+                  color: task.taskPriority.color.withOpacity(0.4),
+                  borderRadius: BorderRadiusDirectional.only(
+                    topEnd: Radius.circular(12.sp),
+                    bottomEnd: Radius.circular(12.sp),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // task name
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          task.taskName ?? '',
+                          style: AppTextStyle.textStyle16.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        // Delete button
+                        IconButton(
+                          onPressed: () => _onDelete(confirmFirst: true),
+                          style: IconButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          icon: Icon(
+                            Icons.delete,
+                            size: 18.sp,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    //
+                    const Spacer(),
+
+                    // time of the task
+                    Text.rich(
+                      TextSpan(
+                        text: _hourFormatter(task.taskStartMoment),
+                        children: [
+                          const TextSpan(text: ' - '),
+
+                          //
+                          TextSpan(
+                            text: _hourFormatter(task.taskEndMoment),
+                          ),
+                        ],
+                      ),
+                      textDirection: TextDirection.ltr,
+                      style: AppTextStyle.textStyle14.copyWith(
+                        color: Colors.grey.shade700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

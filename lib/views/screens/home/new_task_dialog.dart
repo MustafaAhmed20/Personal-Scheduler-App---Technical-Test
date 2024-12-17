@@ -11,11 +11,19 @@ import 'package:scheduler/views/constants/constants.dart';
 //
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
+import 'logic.dart';
+
 double get createTaskDialogHeight => 0.7.sh;
 
 class CreateTaskDialog extends StatefulWidget {
   //
-  const CreateTaskDialog({super.key});
+  final DateTime date;
+
+  //
+  const CreateTaskDialog({
+    super.key,
+    required this.date,
+  });
 
   @override
   _CreateTaskDialogState createState() => _CreateTaskDialogState();
@@ -71,6 +79,15 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
 
     //
     // Submit form
+    addNewTask(
+      taskPriority: _selectedPriority,
+      taskDate: widget.date,
+      //
+      taskName: taskName,
+      taskStartMoment: startTime!,
+      taskEndMoment: endTime!,
+      categories: _addedTaskCategories,
+    );
   }
 
   void _showErrorMessage(String message) {
@@ -127,12 +144,23 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
 
             //
             Padding(
-              padding: EdgeInsetsDirectional.only(start: 8.w),
-              child: Text(
-                'New Task',
-                style: AppTextStyle.textStyle20.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+              padding: EdgeInsetsDirectional.only(start: 8.w, end: 8.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'New Task',
+                    style: AppTextStyle.textStyle20.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Text(
+                    DateFormat('dd/MMM/yy').format(widget.date),
+                    style: AppTextStyle.textStyle14.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
               ),
             ),
 

@@ -8,6 +8,8 @@ import 'package:scheduler/views/widgets/app_scaffold.dart';
 //
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
+import 'logic.dart';
+
 class LoginScreen extends StatefulWidget {
   //
   const LoginScreen({super.key});
@@ -27,6 +29,15 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!_formKey.currentState!.saveAndValidate()) {
       return;
     }
+
+    String? email = _formKey.currentState?.fields['email']?.value;
+    String? password = _formKey.currentState?.fields['password']?.value;
+
+    // Submit the form
+    loginAndPushHomeScreen(
+      email: email!,
+      password: password!,
+    );
   }
 
   //

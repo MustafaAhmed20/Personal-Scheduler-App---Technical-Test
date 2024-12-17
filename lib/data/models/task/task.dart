@@ -50,6 +50,11 @@ class Task {
   @JsonKey(name: 'task_end_moment')
   DateTime taskEndMoment;
 
+  /// Rid of time data
+  static DateTime dateWithoutTime(DateTime date) {
+    return DateTime(date.year, date.month, date.day);
+  }
+
   Task({
     required this.taskPriority,
     this.taskName,
